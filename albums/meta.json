@@ -1,0 +1,4 @@
+{
+  "_comment": "Optional. Key by filename. Anything left out is filled in by the build.",
+  "001-artwork-01.jpg": { "title": "", "date": "", "alt": "" }
+}

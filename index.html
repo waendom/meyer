@@ -1,0 +1,1175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lukas Meyer — portfolio</title>
+<meta name="description" content="Lukas Meyer — digital collage & mixed media. ">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="apple-touch-icon" href="favicon.png">
+<meta name="theme-color" content="#0b0b0d">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Lukas Meyer — portfolio">
+<meta property="og:description" content="Digital collage &amp; mixed media.">
+<meta property="og:image" content="share-preview.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caesar+Dressing&family=Baloo+2:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg: #0b0b0d;
+  --bg-alt: #16101a;
+  --fg: #eae6df;
+  --fg-dim: #948d82;
+  --accent-a: #45d6c6;
+  --accent-b: #e8478f;
+  --gradient: linear-gradient(100deg, var(--accent-a), var(--accent-b));
+  --gap: clamp(14px, 3vw, 28px);
+  --maxw: 1440px;
+}
+*{ box-sizing:border-box; }
+html{ scroll-behavior:smooth; }
+body{
+  margin:0; background:var(--bg); color:var(--fg);
+  font-family:'Baloo 2', sans-serif; font-weight:500; -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+h1,h2,h3, .display{ font-family:'Baloo 2', sans-serif; font-weight:700; letter-spacing:-0.01em; margin:0; }
+a{ color:inherit; }
+img{ max-width:100%; display:block; }
+button{ font-family:inherit; }
+::selection{ background:var(--accent-b); color:#0b0b0d; }
+:focus-visible{ outline: 2px solid var(--accent-a); outline-offset: 3px; }
+img{ -webkit-user-drag:none; user-select:none; }
+
+.eyebrow{
+  font-family:'Baloo 2', sans-serif; font-weight:500; font-size:0.72rem; letter-spacing:0.14em;
+  text-transform:uppercase; color:var(--fg-dim);
+  display:flex; align-items:center; gap:10px;
+}
+.eyebrow::before{ content:""; width:22px; height:1px; background:var(--gradient); }
+.divider{ width:40px; height:1px; background:rgba(234,230,223,0.22); margin-bottom:20px; }
+
+/* ---------- top bar: gray gradient bar, fades to transparent at its bottom edge ---------- */
+.topbar{
+  position:fixed; top:0; left:0; right:0; z-index:50;
+  display:flex; align-items:center; gap:10px;
+  padding: 18px clamp(18px, 4vw, 40px) 30px;
+  background: linear-gradient(to bottom, rgba(11,11,13,0.55) 0%, rgba(11,11,13,0.55) 55%, rgba(11,11,13,0) 100%);
+  transition: padding .35s ease;
+}
+.topbar.scrolled{ padding: 10px clamp(18px, 4vw, 40px) 24px; }
+.topbar-filters{ display:none; gap:8px; overflow-x:auto; }
+.topbar.on-gallery .topbar-filters{ display:flex; }
+.topbar-filters .filter-tab{ font-size:0.72rem; padding:6px 12px; white-space:nowrap; }
+.menu-btn{
+  background:none; border:none; cursor:pointer; width:34px; height:26px; position:relative; padding:0;
+  margin-left:auto; flex-shrink:0;
+}
+.menu-btn span{
+  position:absolute; left:0; right:0; height:2px; background:var(--fg); border-radius:2px;
+  transition: transform .35s ease, opacity .25s ease, background .35s ease;
+}
+.menu-btn span:nth-child(1){ top:2px; }
+.menu-btn span:nth-child(2){ top:12px; }
+.menu-btn span:nth-child(3){ top:22px; }
+.menu-btn.open span:nth-child(1){ transform: translateY(10px) rotate(45deg); }
+.menu-btn.open span:nth-child(2){ opacity:0; }
+.menu-btn.open span:nth-child(3){ transform: translateY(-10px) rotate(-45deg); }
+
+/* ---------- nav overlay ---------- */
+.nav-overlay{
+  position:fixed; inset:0; z-index:40; background:var(--bg);
+  display:flex; flex-direction:column; align-items:flex-start; justify-content:center; gap:18px;
+  padding: 0 clamp(24px, 6vw, 80px);
+  transform: translateY(-100%);
+  transition: transform .5s cubic-bezier(.7,0,.2,1);
+}
+.nav-overlay.open{ transform: translateY(0); }
+.nav-overlay a{
+  font-family:'Baloo 2', sans-serif; font-size: clamp(2rem, 8vw, 3.4rem); font-weight:700;
+  text-decoration:none; color:var(--fg-dim); transition: color .25s ease;
+}
+.nav-overlay a:hover{ color:var(--fg); }
+.nav-overlay a span{
+  background:var(--gradient); -webkit-background-clip:text; background-clip:text; color:transparent; display:none;
+}
+.nav-overlay a:hover span{ display:inline; }
+
+/* ---------- pages ---------- */
+.page[hidden]{ display:none; }
+
+/* ---------- hero ---------- */
+.hero{
+  position:relative; min-height:100svh;
+  display:flex; flex-direction:column; justify-content:flex-end; overflow:hidden;
+  padding: 0 clamp(20px, 5vw, 56px) clamp(48px, 8vh, 88px);
+}
+.hero-bg{ position:absolute; inset:0; z-index:0; }
+.hero-bg img{
+  position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:0;
+  filter: saturate(0.85) brightness(0.55); animation: crossfade 16s infinite;
+}
+.hero-bg img:nth-child(1){ animation-delay:0s; }
+.hero-bg img:nth-child(2){ animation-delay:8s; }
+@keyframes crossfade{
+  0%{ opacity:0; } 8%{ opacity:1; } 50%{ opacity:1; } 58%{ opacity:0; } 100%{ opacity:0; }
+}
+.hero::after{
+  content:""; position:absolute; inset:0; z-index:1;
+  background: linear-gradient(to top, rgba(11,11,13,0.88) 0%, rgba(11,11,13,0.25) 42%, rgba(11,11,13,0) 68%);
+}
+.hero-content{ position:relative; z-index:2; max-width:34ch; }
+.hero h1{
+  font-family:'Caesar Dressing', cursive; font-weight:400;
+  font-size: clamp(1.8rem, 4.8vw, 3rem); line-height:1.1; letter-spacing:0.01em;
+}
+.hero p.tagline{ margin-top:16px; color:var(--fg-dim); font-size: clamp(0.9rem, 1.6vw, 1.05rem); font-weight:500; }
+
+/* ---------- generic sections ---------- */
+.section{ padding: clamp(60px, 10vh, 110px) clamp(18px, 5vw, 56px); }
+.section-head{ max-width:var(--maxw); margin:0 auto 30px; }
+.section-head h2{ font-size: clamp(1.5rem, 3.4vw, 2.2rem); margin-top:8px; }
+
+/* ---------- first look ---------- */
+.first-look{ max-width: 760px; margin: 0 auto; }
+.first-look figure{ margin:0; }
+.first-look img{ width:100%; height:auto; }
+
+.cta-row{ max-width:var(--maxw); margin: 40px auto 0; display:flex; justify-content:center; }
+.btn-gradient{
+  position:relative; display:inline-flex; align-items:center; gap:10px;
+  padding: 14px 26px; border-radius: 999px; border: 1px solid rgba(234,230,223,0.18);
+  background: transparent; color:var(--fg); font-size:0.95rem; letter-spacing:0.02em;
+  cursor:pointer; text-decoration:none;
+  transition: border-color .3s ease, transform .3s ease;
+}
+.btn-gradient:hover{ border-color: transparent; transform: translateY(-1px); }
+.btn-gradient::before{
+  content:""; position:absolute; inset:0; border-radius:999px; padding:1px; background:var(--gradient);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor; mask-composite: exclude;
+  opacity:0; transition: opacity .3s ease;
+}
+.btn-gradient:hover::before{ opacity:1; }
+
+/* ---------- gallery: fullscreen, infinite, organic non-overlapping layout ---------- */
+.filter-tab{
+  font-size:0.82rem; letter-spacing:0.03em; padding:9px 18px; border-radius:999px;
+  border:1px solid rgba(234,230,223,0.18); background:transparent; color:var(--fg-dim); cursor:pointer;
+  transition: background .2s ease, color .2s ease, border-color .2s ease;
+}
+.filter-tab.active{ color:var(--bg); background:var(--fg); border-color:var(--fg); }
+
+.canvas-viewport{
+  position: fixed; inset: 0;        /* == the visual viewport, so centre is truly centre */
+  overflow: hidden;
+  touch-action: none;
+  cursor: grab;
+  background: var(--bg);
+}
+.canvas-viewport.dragging{ cursor: grabbing; }
+.canvas-inner{
+  position:absolute; top:0; left:0;
+  transform-origin: 0 0;
+  will-change: transform;
+  transition: filter .34s ease;
+}
+.canvas-viewport.view-active .canvas-inner{ filter: blur(9px) saturate(.85); }
+.node{
+  position:absolute;
+  transform-origin: 50% 50%;
+  /* no CSS transition: position, scale and spawn are all computed frame in JS so they
+     compose into a single continuous motion instead of chaining separate animations */
+}
+
+/* THE centring bug: <figure> carries a UA default margin of 1em 40px, which offset every
+   image inside its own box. The camera centred the box; the image sat 40px to the right
+   of it. Everything downstream of this looked "off centre" no matter how exact the maths. */
+figure{ margin:0; }
+/* Fullscreen is drawn in its own fixed layer, OUTSIDE the transformed canvas. Centring
+   is then pure CSS (left/top 50% + translate(-50%,-50%)) with no camera maths involved —
+   which removes the whole class of off-centre bugs. The blur is one scrim rather than a
+   filter on ~48 separate tiles, so it stays cheap on a phone. */
+.canvas-viewport{ z-index:1; }
+.node{ cursor:zoom-in; }
+.focus-layer{
+  position:fixed; inset:0; z-index:20;
+  pointer-events:none;
+  touch-action:none;
+  visibility:hidden;          /* no delay: the overlay must vanish the moment it has
+                                 finished shrinking, not when the camera finally stops */
+}
+.focus-layer.active{ visibility:visible; pointer-events:auto; cursor:zoom-out; }
+.focus-scrim{
+  position:absolute; inset:0;
+  background: rgba(11,11,13,0.55);
+  opacity:0;
+  transition: opacity .34s ease;   /* only used while opening; the close drives it per frame */
+}
+.focus-layer.active .focus-scrim{ opacity:1; }
+.focus-frame{
+  position:absolute; left:50%; top:50%;
+  will-change: transform;
+  box-shadow: 0 30px 90px rgba(0,0,0,0.55);
+}
+.focus-frame.animate{ transition: transform .58s cubic-bezier(.16,1,.3,1); }
+.focus-frame img{ width:100%; height:100%; display:block; }
+body.gallery-mode{ overflow:hidden; height:100%; }
+body.gallery-mode footer{ display:none; }
+
+/* ---------- lightbox-triggering images ---------- */
+.lightbox-trigger{ overflow:hidden; position:relative; width:100%; height:100%; }
+.lightbox-trigger img{ width:100%; height:100%; object-fit:cover; display:block; }
+.first-look .lightbox-trigger{ height:auto; }
+.first-look .lightbox-trigger img{ height:auto; object-fit:initial; }
+
+/* ---------- contact page ---------- */
+.contact-section{ padding-top: clamp(110px, 18vh, 160px); min-height: 70vh; }
+.contact-body{ max-width: 60ch; margin: 0 auto; }
+.contact-lead{ font-size: clamp(1.05rem, 2.4vw, 1.35rem); line-height:1.55; color:var(--fg); margin:0 0 40px; }
+.contact-list{ margin:0 0 40px; padding:0; }
+.contact-list > div{ display:flex; gap:20px; flex-wrap:wrap; padding:16px 0; border-top:1px solid rgba(234,230,223,0.10); }
+.contact-list dt{ flex:0 0 8rem; margin:0; color:var(--fg-dim); font-size:0.72rem; letter-spacing:0.14em; text-transform:uppercase; padding-top:3px; }
+.contact-list dd{ margin:0; font-size:1.02rem; }
+.contact-list a{ text-decoration:none; border-bottom:1px solid rgba(234,230,223,0.28); }
+.contact-list a:hover{ color:var(--accent-a); border-bottom-color:var(--accent-a); }
+.contact-note{ color:var(--fg-dim); font-size:0.92rem; line-height:1.6; margin:0; }
+
+/* ---------- about section on the contact page ---------- */
+.about-block{ margin: 0 0 44px; padding-bottom: 36px; border-bottom: 1px solid rgba(234,230,223,0.10); }
+.about-heading{
+  font-size:0.72rem; letter-spacing:0.14em; text-transform:uppercase;
+  color:var(--fg-dim); font-weight:500; margin:0 0 16px;
+}
+.about-text{ margin:0 0 16px; line-height:1.7; font-size:1rem; }
+.about-text:last-child{ margin-bottom:0; }
+
+/* ---------- shown only when scripting is off ---------- */
+.noscript-note{
+  position:fixed; inset:0; z-index:90; background:var(--bg); color:var(--fg);
+  display:flex; flex-direction:column; gap:14px;
+  align-items:center; justify-content:center; text-align:center;
+  padding:0 clamp(24px, 8vw, 80px); font-size:0.98rem; line-height:1.6;
+}
+.noscript-note p{ max-width:44ch; margin:0; }
+.noscript-note a{ color:var(--accent-a); }
+
+/* ---------- caption under the enlarged piece ---------- */
+.focus-caption{
+  position:absolute; left:50%; bottom:max(18px, env(safe-area-inset-bottom));
+  transform:translateX(-50%);
+  display:flex; gap:10px; align-items:baseline; flex-wrap:wrap; justify-content:center;
+  max-width:92vw; padding:0 16px; text-align:center;
+  font-size:0.82rem; color:var(--fg); opacity:0; transition:opacity .3s ease .12s;
+  pointer-events:none;
+}
+.focus-layer.active .focus-caption{ opacity:1; }
+.focus-caption .focus-date{ color:var(--fg-dim); }
+.focus-caption .placeholder{ color:var(--fg-dim); font-style:italic; }
+
+/* ---------- how much of the collection has been seen ---------- */
+.seen-count{
+  position:fixed; right:14px; bottom:max(14px, env(safe-area-inset-bottom));
+  z-index:30; display:none;
+  padding:6px 12px; border-radius:999px;
+  background:rgba(11,11,13,0.45); color:var(--fg);
+  font-size:0.72rem; letter-spacing:0.04em; opacity:0.55;
+  pointer-events:none; transition:opacity .3s ease;
+}
+body.gallery-mode .seen-count{ display:block; }
+.seen-count.complete{ opacity:0.85; color:var(--accent-a); }
+
+/* ---------- footer ---------- */
+footer{
+  padding: 50px clamp(18px, 5vw, 56px) 40px; max-width:var(--maxw); margin:0 auto;
+  display:flex; flex-wrap:wrap; gap:16px; align-items:center; justify-content:space-between;
+  border-top:1px solid rgba(234,230,223,0.08);
+}
+footer .foot-meta{ color:var(--fg-dim); font-size:0.85rem; display:flex; gap:18px; flex-wrap:wrap; }
+footer a{ text-decoration:none; }
+footer a:hover{ color: var(--accent-a); }
+
+/* ---------- back to top ---------- */
+.top-btn{
+  position:fixed; right:20px; bottom:20px; z-index:45; width:46px; height:46px; border-radius:50%;
+  background:var(--fg); color:var(--bg); border:none; cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  opacity:0; transform:translateY(10px); pointer-events:none;
+  transition: opacity .3s ease, transform .3s ease;
+}
+.top-btn.show{ opacity:1; transform:translateY(0); pointer-events:auto; }
+
+@media (prefers-reduced-motion: reduce){
+  html{ scroll-behavior:auto; }
+  .hero-bg img{ animation:none; opacity:1 !important; }
+  .hero-bg img:nth-child(2){ display:none; }
+}
+</style>
+</head>
+<body>
+
+<!-- Artwork, proportions and the grid mapping all come from gallery-data.js, which the
+     GitHub Action regenerates whenever anything in albums/ changes. -->
+
+<header class="topbar" id="topbar">
+  <div class="topbar-filters" id="topbarFilters">
+    <button class="filter-tab active" data-filter="all">All works</button>
+    <button class="filter-tab" data-filter="digital">Digital</button>
+    <button class="filter-tab" data-filter="mixed">Mixed Media</button>
+  </div>
+  <button class="menu-btn" id="menuBtn" aria-label="menu"><span></span><span></span><span></span></button>
+</header>
+
+<nav class="nav-overlay" id="navOverlay">
+  <a href="#home" class="nav-link" data-route="home">Home <span>→</span></a>
+  <a href="#gallery" class="nav-link" data-route="gallery">Gallery <span>→</span></a>
+  <a href="#contact" class="nav-link" data-route="contact">Contact <span>→</span></a>
+</nav>
+
+<main id="page-home" class="page">
+  <section class="hero" id="hero">
+    <div class="hero-bg">
+      <img id="heroA" alt="" role="presentation">
+      <img id="heroB" alt="" role="presentation">
+    </div>
+    <div class="hero-content">
+      <h1>Lukas Meyer</h1>
+      <p class="tagline">digital collage &amp; mixed media</p>
+    </div>
+  </section>
+
+  <section class="section" id="selected">
+    <div class="section-head">
+      <div class="divider"></div>
+      <h2>A first look</h2>
+    </div>
+    <div class="first-look">
+      <figure class="lightbox-trigger">
+        <img id="firstLook" alt="Selected artwork">
+      </figure>
+    </div>
+    <div class="cta-row">
+      <a href="#gallery" class="btn-gradient" data-route="gallery">View full gallery →</a>
+    </div>
+  </section>
+</main>
+
+<noscript>
+  <div class="noscript-note">
+    <p>This gallery needs JavaScript to run — it draws an endless grid of artwork that is
+      built in the browser.</p>
+    <p>Please enable JavaScript, or write to
+      <a href="mailto:contact@lukasmeyer.com">contact@lukasmeyer.com</a> to see the work
+      another way.</p>
+  </div>
+</noscript>
+
+<main id="page-gallery" class="page" hidden>
+  <div class="canvas-viewport" id="canvasViewport">
+    <div class="canvas-inner" id="canvasInner"></div>
+  </div>
+  <div class="focus-layer" id="focusLayer">
+    <div class="focus-scrim"></div>
+    <div class="focus-frame" id="focusFrame"><img id="focusImg" alt=""></div>
+    <figcaption class="focus-caption" id="focusCaption">
+      <span id="focusTitle"></span><span class="focus-date" id="focusDate"></span>
+    </figcaption>
+  </div>
+</main>
+
+<main id="page-contact" class="page" hidden>
+  <section class="section contact-section">
+    <div class="section-head">
+      <div class="divider"></div>
+      <h2>Contact</h2>
+    </div>
+    <div class="contact-body">
+      <section class="about-block">
+        <h3 class="about-heading">About Lukas</h3>
+        <p class="about-text">[ A few sentences about Lukas — how he works, what draws him to
+          collage and mixed media, where the work comes from. Two or three short paragraphs
+          read best here. ]</p>
+        <p class="about-text">[ Optional second paragraph — exhibitions, background, what he
+          is working on at the moment. ]</p>
+      </section>
+
+      <p class="contact-lead">[ one or two lines — what he's open to: commissions, prints,
+        exhibitions, collaborations. Placeholder for now. ]</p>
+      <dl class="contact-list">
+        <div><dt>Email</dt><dd><a href="mailto:contact@lukasmeyer.com">contact@lukasmeyer.com</a></dd></div>
+        <div><dt>Studio</dt><dd>[ city / country ]</dd></div>
+        <div><dt>Enquiries</dt><dd>[ prints &amp; original works ]</dd></div>
+      </dl>
+      <p class="contact-note">[ optional closing line — response time, or a note about
+        commission availability. ]</p>
+    </div>
+  </section>
+</main>
+
+
+
+<button class="top-btn" id="topBtn" aria-label="back to top">↑</button>
+
+
+
+<div class="seen-count" id="seenCount" aria-live="polite"></div>
+
+<footer id="site-footer">
+  <div class="foot-meta">
+    <span>© 2024–2026</span>
+    <a href="mailto:contact@lukasmeyer.com">contact@lukasmeyer.com</a>
+  </div>
+</footer>
+
+<script src="gallery-data.js"></script>
+<script>
+  // ---- artwork data, generated by scripts/build-gallery.mjs from the albums/ folders ----
+  const G = window.GALLERY;
+  if(!G) throw new Error('gallery-data.js is missing — run: node scripts/build-gallery.mjs');
+  const ART_SRC = G.SRC;        // full size, only used by the enlarged view
+  const ART_THUMB = G.THUMB;    // small, used by the grid tiles
+  // banner and front-page piece, chosen by the build (see featured.json)
+  if(G.banner && G.banner[0]) document.getElementById('heroA').src = G.banner[0];
+  if(G.banner && G.banner[1]) document.getElementById('heroB').src = G.banner[1];
+  if(G.firstLook) document.getElementById('firstLook').src = G.firstLook;
+
+  // ---- gallery layout: a triangular (honeycomb) lattice ----
+  // Every cell centre sits on a regular lattice, so the centre-to-centre distance to all
+  // six neighbours is identical everywhere — that is what makes the spacing read as even.
+  // Each image is sized to a constant circumscribed diameter rather than a constant width,
+  // so a tall piece and a square piece occupy the same visual footprint and the gaps
+  // between them stay consistent in every direction. Nothing is ever cropped.
+  const IMG_IDS = G.ids;        // categories interleaved by the build
+  const RATIO = G.RATIO;
+  const CAT = G.CAT;
+  const R_CIRC = 120;                 // half the circumscribed diameter of every piece
+  const LATTICE_GAP = 36;             // clear space between neighbouring pieces
+  const SX = 2*R_CIRC + LATTICE_GAP;  // horizontal lattice step
+  const SY = SX * 0.8660254;          // row step of a triangular lattice
+  let CH = 3, RH = 3;                 // ring size; recomputed for the actual viewport
+  // image = IMG_IDS[(col + 3*row) mod N]. Across the six neighbour offsets the index shifts
+  // by ±1, ±2, ±3 or ±4 — never 0 for any N of five or more — so a piece can never sit next
+  // to itself, while the arrangement still moves on with every step instead of tiling.
+  const A_COL = 1;
+
+  function sizeFor(id){
+    const r = RATIO[id];
+    const h = 2*R_CIRC / Math.sqrt(1 + r*r);
+    return { w: Math.round(h*r), h: Math.round(h) };
+  }
+  // Which artwork a cell shows. Under a category filter a cell KEEPS its piece when that
+  // piece belongs to the category, so switching filters only respawns what genuinely
+  // leaves or arrives. Cells whose piece drops out take a substitute from the generated
+  // table, which the build solved so that no piece ever ends up beside itself.
+  const SUBS = G.SUBS;
+  const B_ROW = G.B_ROW;      // row shift chosen by the build for this number of artworks
+  let activeFilter = 'all';
+  function imageForFilter(filt, col, row){
+    const n = IMG_IDS.length;
+    const i = (((A_COL*col + B_ROW*row) % n) + n) % n;
+    const img = IMG_IDS[i];
+    if(filt === 'all' || CAT[img] === filt) return img;
+    const table = SUBS[filt];
+    return table ? table[i + '_' + (row & 1)] : img;
+  }
+  function imageForCell(col, row){ return imageForFilter(activeFilter, col, row); }
+
+  function cellX(col, row){ return col*SX + ((row & 1) ? SX/2 : 0); }
+  function cellY(row){ return row*SY; }
+
+  const canvasViewport = document.getElementById('canvasViewport');
+  const canvasInner = document.getElementById('canvasInner');
+
+  const cells = [];
+  function buildGalleryCanvas(){
+    const frag = document.createDocumentFragment();
+    for(let dr = -RH; dr <= RH; dr++){
+      for(let dc = -CH; dc <= CH; dc++){
+        const div = document.createElement('div');
+        div.className = 'node';
+        div.innerHTML = '<figure class="lightbox-trigger"><img alt="" decoding="async"></figure>';
+        div.addEventListener('click', function(){
+          // only the centred piece opens; background pieces are deliberately inert,
+          // and a tap that just closed the view must not immediately re-open it
+          const now = performance.now();
+          // A browser dispatches the synthetic click within a few milliseconds of the
+          // pointerup, so the guard only needs to cover that instant. Anything longer eats
+          // the genuine tap that follows a swipe — which is what forced a second tap.
+          if(clickGuardArmed && now - clickGuardArmed < 120){ clickGuardArmed = 0; return; }
+          clickGuardArmed = 0;
+          const me = cells.find(x => x.el === div);
+          if(!me) return;
+          // Judge by where the camera is HEADING, not where it happens to be. Requiring it
+          // to have arrived meant a tap during the settle only re-centred a piece that was
+          // already on its way — so the piece needed a second tap to open.
+          if(isTargetCell(me)){
+            enterViewMode(me);
+          } else {
+            homeOn(me, 520);
+          }
+        });
+        cells.push({ el: div, img: div.querySelector('img'), dc: dc, dr: dr,
+                     sx: dc + CH, sy: dr + RH,        // fixed slot in the recycling ring
+                     col: null, row: null, imgId: null, category: null,
+                     w: 0, h: 0, cx: 0, cy: 0, dx: 0, dy: 0, d: 0, weight: 0,
+                     lastT: '', lastZ: 0 });
+        frag.appendChild(div);
+      }
+    }
+    canvasInner.appendChild(frag);
+  }
+  buildGalleryCanvas();
+
+  // ---- camera: translation only; the zoom never changes while browsing ----
+  const focusLayer = document.getElementById('focusLayer');
+  const focusFrame = document.getElementById('focusFrame');
+  const focusImg   = document.getElementById('focusImg');
+  const focusScrim = document.querySelector('.focus-scrim');
+  const focusTitleEl = document.getElementById('focusTitle');
+  const focusDateEl  = document.getElementById('focusDate');
+  const seenCountEl  = document.getElementById('seenCount');
+
+  // Which artworks the visitor has actually had in the centre. The grid repeats forever,
+  // so without this there is no way to tell whether you have seen everything.
+  const seen = new Set();
+  function noteSeen(id){
+    if(!id || seen.has(id)) return;
+    seen.add(id);
+    if(!seenCountEl) return;
+    const total = IMG_IDS.length;
+    seenCountEl.textContent = seen.size + ' / ' + total + ' seen';
+    seenCountEl.classList.toggle('complete', seen.size >= total);
+  }
+  const cam = { x: 0, y: 0 };
+  let camZoom = 1;
+  const camTarget = { x: 0, y: 0 };
+  let camSettling = false, dragging = false, dragMode = null;
+  let viewMode = false, viewP = 0, viewCell = null, viewDst = null, viewAnim = null;
+  let filterBusy = false;
+  // A pointerup is followed by a synthetic click. Only that one click must be swallowed —
+  // an earlier version blocked every tap for 260ms, which ate the user's genuine next tap
+  // and looked exactly like needing to tap twice. Armed once, consumed once.
+  let clickGuardArmed = 0;
+
+  // Every number that decides how the gallery *feels* lives here, so it can be tuned in
+  // one place (and, in this preview build, from the panel in the corner).
+  const TUNE = {
+    highlight:   2.0,   // size of the piece under the centre
+    weightR:     1.0,   // how far a piece's pull reaches, in lattice steps
+    pushP:       100,   // how hard neighbours are pushed aside
+    pushRadius:  6.0,   // how far that push reaches, in lattice steps
+    dragGain:    0.6,   // grid movement per finger movement
+    leaveBias:   0.4,   // how much the piece you start on gives up its claim
+    homeDur:     480,   // how long the settle takes, ms
+    backLimit:   0.15,  // below this much movement it may spring back to where you started
+    viewStep:    220,   // finger travel to fully close the enlarged view
+    viewCommit:  0.45,  // fraction of that travel needed to commit to the next piece
+    closeDur:    160    // how long the enlarged piece takes to shrink home, ms
+  };
+  const HORIZ_COS_V = 0.86;
+
+  function viewW(){ return canvasViewport.clientWidth || window.innerWidth; }
+  function viewH(){ return canvasViewport.clientHeight || window.innerHeight; }
+  function computeZoom(){
+    camZoom = Math.sqrt(viewW()*viewH() / (4.5 * SX * SY));
+  }
+  // Only keep as many tiles as can actually reach the screen. A fixed 7x7 ring meant a
+  // phone was animating rows that were never visible.
+  function ringFor(){
+    const margin = R_CIRC * TUNE.highlight + 40;
+    return {
+      c: Math.max(1, Math.ceil((viewW()/(2*camZoom) + margin) / SX)),
+      r: Math.max(1, Math.ceil((viewH()/(2*camZoom) + margin) / SY))
+    };
+  }
+  function easeOutCubic(t){ return 1 - Math.pow(1 - t, 3); }
+  // slight overshoot, used when artworks pop back in after a category change
+  function easeOutBack(t){ const c1 = 1.70158, c3 = c1 + 1; return 1 + c3*Math.pow(t-1,3) + c1*Math.pow(t-1,2); }
+  function smoothstep(t){ t = t<0?0:(t>1?1:t); return t*t*(3-2*t); }
+  function lerp(a,b,t){ return a + (b-a)*t; }
+
+  const NC = 2*CH + 1, NR = 2*RH + 1;
+  function wrapDelta(d, n){ d = ((d % n) + n) % n; return d > n/2 ? d - n : d; }
+  // Each tile owns a fixed slot in the ring and is mapped to the lattice coordinate of
+  // that slot nearest the camera. Crossing one lattice line therefore re-homes a single
+  // row or column instead of all 49 tiles — the bulk rewrite was what made swiping stutter.
+  function updateGrid(force){
+    const camRow = Math.round(cam.y / SY);
+    const camCol = Math.round((cam.x - ((camRow & 1) ? SX/2 : 0)) / SX);
+    const baseC = ((camCol % NC) + NC) % NC;
+    const baseR = ((camRow % NR) + NR) % NR;
+    const changed = [];
+    for(let i = 0; i < cells.length; i++){
+      const c = cells[i];
+      const col = camCol + wrapDelta(c.sx - baseC, NC);
+      const row = camRow + wrapDelta(c.sy - baseR, NR);
+      if(col === c.col && row === c.row && !force) continue;
+      c.col = col; c.row = row;
+      const id = imageForCell(col, row);
+      if(id !== c.imgId){
+        c.imgId = id;
+        c.category = CAT[id];
+        c.img.src = ART_THUMB[id];
+        c.img.alt = (G.ALT && G.ALT[id]) || ('Artwork ' + id);
+        const s = sizeFor(id);
+        c.w = s.w; c.h = s.h;
+        c.el.style.width = s.w + 'px';
+        c.el.style.height = s.h + 'px';
+        changed.push(c);
+      }
+      c.cx = cellX(col, row);            // tiles are centred on their lattice point
+      c.cy = cellY(row);
+      c.el.style.left = (c.cx - c.w/2) + 'px';
+      c.el.style.top  = (c.cy - c.h/2) + 'px';
+    }
+    return changed;
+  }
+
+  function render(){
+    canvasInner.style.transform =
+      'translate(' + (viewW()/2) + 'px,' + (viewH()/2) + 'px) scale(' + camZoom + ') ' +
+      'translate(' + (-cam.x) + 'px,' + (-cam.y) + 'px)';
+  }
+
+  // ---- spawn / despawn, animated in JS so it composes with the weight scaling ----
+  let spawnActive = false;
+  function spawnValue(c, now){
+    const s = c.spawnAnim;
+    if(!s) return 1;
+    spawnActive = true;
+    const t = Math.min(1, Math.max(0, (now - s.t0) / s.dur));
+    if(t >= 1){ c.spawnAnim = null; return s.to; }
+    const e = s.to > s.from ? easeOutBack(t) : t;
+    return lerp(s.from, s.to, e);
+  }
+  function animateSpawn(c, from, to, dur, delay){
+    c.spawnAnim = { from: from, to: to, t0: performance.now() + (delay||0), dur: dur };
+    // spawnActive is only discovered inside the per-tile pass, which the idle skip may be
+    // skipping — so say outright that there is something to draw. Without this a category
+    // change started while the gallery sat still never animated at all.
+    dirty = true;
+  }
+
+  // ---- every frame: weight each piece by how close it is to the centre of the screen ----
+  // The nearest piece grows toward HIGHLIGHT_SCALE and the others give way. Because this is
+  // a continuous function of the camera, a piece already starts growing while you are still
+  // dragging towards it — that is the feedback about where you are heading.
+  let homeCell = null;
+  function layoutCells(now){
+    let bestW = -1;
+    spawnActive = false;
+    for(let i = 0; i < cells.length; i++){
+      const c = cells[i];
+      c.dx = c.cx - cam.x; c.dy = c.cy - cam.y;
+      c.d = Math.hypot(c.dx, c.dy);
+      c.weight = smoothstep(1 - c.d/(SX*TUNE.weightR));
+      if(c.weight > bestW){ bestW = c.weight; homeCell = c; }
+      if(c.weight > 0.92) noteSeen(c.imgId);
+    }
+    const lock = bestW;                       // how settled we are on a single piece
+    for(let i = 0; i < cells.length; i++){
+      const c = cells[i];
+      let px = 0, py = 0;
+      if(c.d > 1 && c.d < SX*TUNE.pushRadius && Math.abs(c.dx)/c.d <= HORIZ_COS_V){
+        const p = TUNE.pushP * (1 - c.d/(SX*TUNE.pushRadius)) * lock * (1 - c.weight);
+        px = c.dx/c.d*p; py = c.dy/c.d*p;
+      }
+      const scale = (1 + (TUNE.highlight - 1) * c.weight) * spawnValue(c, now);
+      let t = '';
+      if(px || py) t = 'translate(' + px.toFixed(1) + 'px,' + py.toFixed(1) + 'px)';
+      if(scale !== 1) t += (t ? ' ' : '') + 'scale(' + scale.toFixed(3) + ')';
+      if(t !== c.lastT){ c.el.style.transform = t; c.lastT = t; }
+      const z = c.weight > 0.5 ? 5 : 1;
+      if(z !== c.lastZ){ c.el.style.zIndex = z; c.lastZ = z; }
+    }
+  }
+
+  function cellAt(coord){
+    if(!coord) return null;
+    for(let i = 0; i < cells.length; i++){
+      if(cells[i].col === coord.col && cells[i].row === coord.row) return cells[i];
+    }
+    return null;
+  }
+  function nearestCell(px, py){
+    let best = null, bestD = Infinity;
+    cells.forEach(c => {
+      const d = Math.hypot(c.cx - px, c.cy - py);
+      if(d < bestD){ bestD = d; best = c; }
+    });
+    return best;
+  }
+  function neighbourInDirection(from, dirX, dirY){
+    const len = Math.hypot(dirX, dirY);
+    if(!len || !from) return null;
+    const ux = dirX/len, uy = dirY/len;
+    let best = null, bestScore = Infinity;
+    cells.forEach(c => {
+      if(c === from) return;
+      const vx = c.cx - from.cx, vy = c.cy - from.cy;
+      const d = Math.hypot(vx, vy);
+      if(d < 1 || d > SX*1.4) return;         // immediate ring only
+      const cos = (vx*ux + vy*uy) / d;
+      if(cos < 0.5) return;
+      const score = d / cos;
+      if(score < bestScore){ bestScore = score; best = c; }
+    });
+    return best;
+  }
+
+  // The camera chases its target with exponential smoothing rather than following a fixed
+  // curve. Three reasons: it moves fastest on the very first frame, so there is no sense of
+  // delay; it eases to a stop by itself; and pointing it somewhere new mid-flight simply
+  // moves the target, so chained swipes flow together instead of restarting each time.
+  // (A critically damped spring was the other candidate but it starts from a standstill,
+  // which is exactly the sluggishness being fixed here.)
+  function tweenCam(x, y, dur){
+    camTarget.x = x; camTarget.y = y;
+    camSettling = true;
+  }
+  // nearest piece to the screen centre, but the one we started the gesture on is
+  // handicapped by TUNE.leaveBias so it is easier to move away than to fall back
+  function settleTarget(wx, wy){
+    const origin = cellAt(dragOrigin);
+    const moved = Math.hypot(wx, wy);
+    // Springing back is reserved for gestures that barely moved. Past that, the piece you
+    // swiped toward wins outright — near-ties used to fall back to the centre piece, which
+    // is what made the gallery feel like it was resisting.
+    if(origin && moved < SX * TUNE.backLimit) return origin;
+    if(origin && moved > 1){
+      const n = neighbourInDirection(origin, wx, wy);
+      if(n) return n;
+    }
+    let best = null, bestD = Infinity;
+    for(let i = 0; i < cells.length; i++){
+      const c = cells[i];
+      let d = Math.hypot(c.cx - cam.x, c.cy - cam.y);
+      if(dragOrigin && c.col === dragOrigin.col && c.row === dragOrigin.row) d *= (1 + TUNE.leaveBias);
+      if(d < bestD){ bestD = d; best = c; }
+    }
+    return best;
+  }
+  // the cell the camera is settling on: its tween target if one is running, else the centre
+  function isTargetCell(c){
+    const tx = camSettling ? camTarget.x : cam.x;
+    const ty = camSettling ? camTarget.y : cam.y;
+    let best = null, bestD = Infinity;
+    for(let i = 0; i < cells.length; i++){
+      const d = Math.hypot(cells[i].cx - tx, cells[i].cy - ty);
+      if(d < bestD){ bestD = d; best = cells[i]; }
+    }
+    return best === c;
+  }
+  function homeOn(c, dur){
+    if(!c) return;
+    tweenCam(c.cx, c.cy, dur);
+  }
+  // Cells are recycled onto new lattice coordinates as the camera travels, so holding on
+  // to a cell object across a gesture points somewhere else by the time it is used.
+  // Anything that has to survive a gesture is kept as plain world coordinates.
+  function pointOf(c){ return c ? { x: c.cx, y: c.cy } : null; }
+  function homeOnPoint(p, dur){ if(p) tweenCam(p.x, p.y, dur); }
+
+  // ---- the enlarged view ----
+  function fullscreenSize(c){
+    const s = Math.min(viewW()*0.92 / c.w, viewH()*0.86 / c.h);
+    return { w: c.w*s, h: c.h*s };
+  }
+  // Computed from the camera rather than measured. getBoundingClientRect forces the
+  // browser to flush layout, which is the last thing wanted inside an animation loop.
+  function tileScreenState(c, tw){
+    const shown = c.w * camZoom * (1 + (TUNE.highlight - 1) * c.weight);
+    return { dx: (c.cx - cam.x) * camZoom,
+             dy: (c.cy - cam.y) * camZoom,
+             scale: shown / tw };
+  }
+  function frameTransform(dx, dy, scale){
+    return 'translate(-50%,-50%) translate(' + dx.toFixed(2) + 'px,' + dy.toFixed(2) + 'px) scale(' + scale.toFixed(4) + ')';
+  }
+  function enterViewMode(c){
+    if(!c || viewMode) return;
+    if(pageGallery.hidden) return;   // nothing in the gallery may act while it is not shown
+    viewMode = true; viewP = 0;
+    viewCell = { col: c.col, row: c.row };
+    const size = fullscreenSize(c);
+    focusImg.src = ART_SRC[c.imgId];        // full resolution, only here
+    focusImg.alt = (G.ALT && G.ALT[c.imgId]) || ('Artwork ' + c.imgId);
+    // Title and date sit under the enlarged piece. Anything not filled in yet shows as a
+    // placeholder rather than an empty gap, so it is obvious what is still missing.
+    if(focusTitleEl){
+      const title = G.TITLE && G.TITLE[c.imgId];
+      focusTitleEl.textContent = title || '[ title ]';
+      focusTitleEl.className = title ? '' : 'placeholder';
+    }
+    if(focusDateEl){
+      const date = G.DATE && G.DATE[c.imgId];
+      focusDateEl.textContent = date || '[ date ]';
+      focusDateEl.className = date ? 'focus-date' : 'focus-date placeholder';
+    }
+    focusFrame.style.width  = size.w + 'px';
+    focusFrame.style.height = size.h + 'px';
+    const st = tileScreenState(c, size.w);
+    focusFrame.classList.remove('animate');
+    focusFrame.style.transform = frameTransform(st.dx, st.dy, st.scale);
+    void focusFrame.offsetWidth;
+    focusFrame.classList.add('animate');
+    focusLayer.classList.add('active');
+    canvasViewport.classList.add('view-active');
+    focusScrim.style.opacity = '';
+    canvasInner.style.filter = '';
+    focusFrame.style.transform = 'translate(-50%,-50%)';
+    c.el.style.opacity = '0';
+  }
+  function finishClose(){
+    viewMode = false; viewP = 0; viewAnim = null;
+    dragMode = null; vDownX = vDownY = null;
+    focusLayer.classList.remove('active');
+    canvasViewport.classList.remove('view-active');
+    focusScrim.style.opacity = '';
+    focusScrim.style.transition = '';
+    canvasInner.style.filter = '';
+    canvasInner.style.transition = '';
+    focusFrame.classList.remove('animate');
+    cells.forEach(x => { x.el.style.opacity = ''; x.lastT = ''; });
+    focusFrame.style.transform = 'translate(-50%,-50%)';
+    viewCell = null; viewDst = null;
+  }
+  // Drives the whole close: the enlarged piece shrinks back into its tile while the grid
+  // slides on, the blur lifts, and its tile fades back in — all from one progress value,
+  // so it can be scrubbed by the finger or run out on its own without ever jumping.
+  function applyViewProgress(p){
+    const src = cellAt(viewCell);
+    if(!src) return;
+    // Read live every frame so the shrinking image stays welded to its own tile. The tile
+    // is exactly what the camera is travelling toward, so tracking it is what turns the
+    // shrink and the journey into one motion rather than two.
+    const st = tileScreenState(src, fullscreenSize(src).w);
+    // Position is NOT interpolated: the overlay sits exactly on its tile from the first
+    // frame and rides along as the grid moves. Interpolating it left the image hanging in
+    // the middle of the screen — on top of the piece arriving there — until it snapped
+    // away at the end. That was the ghost. Only the size still eases down.
+    focusFrame.style.transform = frameTransform(st.dx, st.dy, lerp(1, st.scale, p));
+    focusScrim.style.opacity = (1 - p).toFixed(3);
+    canvasInner.style.filter = p >= 0.999 ? 'none'
+      : 'blur(' + (9*(1-p)).toFixed(2) + 'px) saturate(' + (1 - 0.15*(1-p)).toFixed(3) + ')';
+    // the real tile stays hidden until the swap; showing it early double-draws the piece
+  }
+  function animateView(to, dur){
+    viewAnim = { from: viewP, to: to, t0: performance.now(), dur: dur || 320 };
+    focusFrame.classList.remove('animate');       // driven per frame, not by CSS
+    focusScrim.style.transition = 'none';
+    canvasInner.style.transition = 'none';
+  }
+  function closeViewMode(){
+    if(!viewMode) return;
+    animateView(1, TUNE.closeDur);      // the camera does not move: it shrinks where it is
+  }
+
+  // ---- frame loop ----
+  let idleFrames = 0, dirty = true, lastFrame = performance.now();
+  function tick(now){
+    const dt = Math.min(0.05, Math.max(0.001, (now - lastFrame) / 1000));
+    lastFrame = now;
+    if(!dragging && camSettling){
+      // homeDur still describes the settle: k is chosen so the move is ~98% done by then.
+      // Frame-rate independent, so it behaves the same on a 60Hz and a 120Hz screen.
+      const k = 4800 / Math.max(120, TUNE.homeDur);
+      const f = 1 - Math.exp(-k * dt);
+      cam.x += (camTarget.x - cam.x) * f;
+      cam.y += (camTarget.y - cam.y) * f;
+      if(Math.hypot(camTarget.x - cam.x, camTarget.y - cam.y) < 0.35){
+        cam.x = camTarget.x; cam.y = camTarget.y;
+        camSettling = false;
+      }
+    }
+    // With nothing in motion there is nothing to recompute. Skipping the per-tile work
+    // while the gallery sits still keeps a weak phone from spending battery on a still screen.
+    // `dirty` covers anything that moves the camera without running an animation — the
+    // wheel, for one. Without it the idle skip stops drawing and the input looks dead.
+    const busy = dragging || camSettling || viewAnim || spawnActive || dirty;
+    if(busy){ idleFrames = 0; dirty = false; } else { idleFrames++; }
+    if(idleFrames < 3){
+      updateGrid(false);
+      layoutCells(now);
+      render();
+    }
+    if(viewMode){
+      if(dragMode === 'view'){
+        applyViewProgress(viewP);
+      } else if(viewAnim){
+        const t = Math.min(1, (now - viewAnim.t0) / viewAnim.dur);
+        viewP = lerp(viewAnim.from, viewAnim.to, easeOutCubic(t));
+        applyViewProgress(viewP);
+        if(t >= 1){
+          viewAnim = null;
+          if(viewP > 0.99) finishClose();          // the frame already matches its tile
+        }
+      }
+    }
+    requestAnimationFrame(tick);
+  }
+
+  // ---- input ----
+  let startPX=0, startPY=0, startCamX=0, startCamY=0, movedDist=0, panning=false;
+  let dragOrigin = null;
+  const MOVE_THRESHOLD = 12;
+
+  canvasViewport.addEventListener('pointerdown', (e) => {
+    if(viewMode) return;                       // the overlay handles its own gestures
+    dragging = true; dragMode = 'grid'; panning = false; movedDist = 0;
+    camSettling = false;
+    startPX = e.clientX; startPY = e.clientY;
+    startCamX = cam.x; startCamY = cam.y;
+    dragOrigin = homeCell ? { col: homeCell.col, row: homeCell.row } : null;
+    canvasViewport.classList.add('dragging');
+    try{ canvasViewport.setPointerCapture(e.pointerId); }catch(err){}
+  });
+  canvasViewport.addEventListener('pointermove', (e) => {
+    if(!dragging || dragMode !== 'grid') return;
+    const dx = e.clientX - startPX, dy = e.clientY - startPY;
+    movedDist = Math.hypot(dx, dy);
+    if(!panning && movedDist > MOVE_THRESHOLD){ panning = true; }
+    if(!panning) return;
+    cam.x = startCamX - dx * TUNE.dragGain / camZoom;
+    cam.y = startCamY - dy * TUNE.dragGain / camZoom;
+    dirty = true;
+  });
+  function endGridDrag(e){
+    if(!dragging || dragMode !== 'grid') return;
+    dragging = false; dragMode = null;
+    canvasViewport.classList.remove('dragging');
+    try{ canvasViewport.releasePointerCapture(e.pointerId); }catch(err){}
+    if(!panning) return;                       // a tap; the cell click handles it
+    // The piece you started on counts as slightly further away than it really is, so a
+    // half-committed swipe carries on to the neighbour instead of springing back. Without
+    // this the centre piece wins every near-tie and the gallery feels sticky.
+    homeOn(settleTarget(cam.x - startCamX, cam.y - startCamY), TUNE.homeDur);
+  }
+  canvasViewport.addEventListener('pointerup', endGridDrag);
+  canvasViewport.addEventListener('pointercancel', endGridDrag);
+  canvasViewport.addEventListener('click', (e) => {
+    if(movedDist >= MOVE_THRESHOLD){ e.stopPropagation(); e.preventDefault(); }
+  }, true);
+
+  // gestures on the enlarged view
+  let vDownX = null, vDownY = null, vStartCamX = 0, vStartCamY = 0;
+  focusLayer.addEventListener('pointerdown', (e) => {
+    e.preventDefault();
+    vDownX = e.clientX; vDownY = e.clientY;
+    vStartCamX = cam.x; vStartCamY = cam.y;
+    dragging = true; dragMode = 'view'; camSettling = false; viewP = 0; viewDst = null;
+    focusFrame.classList.remove('animate');
+    focusScrim.style.transition = 'none';
+    canvasInner.style.transition = 'none';
+    try{ focusLayer.setPointerCapture(e.pointerId); }catch(err){}
+  });
+  focusLayer.addEventListener('pointermove', (e) => {
+    if(vDownX === null) return;
+    const dx = e.clientX - vDownX, dy = e.clientY - vDownY;
+    const dist = Math.hypot(dx, dy);
+    // Only the shrink is scrubbed. The camera deliberately stays put, so the piece
+    // minimises straight back into the tile it came from instead of sliding across the
+    // screen after a moving grid. Travelling to the neighbour is a separate, later step.
+    viewP = Math.min(1, dist / TUNE.viewStep);
+    const src = cellAt(viewCell);
+    if(src && dist > 6 && !viewDst){
+      viewDst = pointOf(neighbourInDirection(src, -dx, -dy) || src);
+    }
+  });
+  function endViewGesture(e){
+    if(vDownX === null) return;
+    const dx = e.clientX - vDownX, dy = e.clientY - vDownY;
+    const dist = Math.hypot(dx, dy);
+    vDownX = vDownY = null;
+    dragging = false; dragMode = null;
+    try{ focusLayer.releasePointerCapture(e.pointerId); }catch(err){}
+    clickGuardArmed = performance.now();          // swallow just this gesture's click
+    if(dist < 8){ closeViewMode(); return; }               // a tap simply closes it
+    if(viewP >= TUNE.viewCommit){
+      // Both at once: the piece finishes shrinking into its tile while the grid is already
+      // on its way to the neighbour. The overlay is welded to that tile, so the instant the
+      // shrink completes the two coincide exactly and we swap them — invisibly, mid-motion.
+      // From there the ordinary snap carries on: this piece keeps shrinking as its weight
+      // falls away and the next one grows, precisely as in a normal swipe.
+      homeOnPoint(viewDst, TUNE.homeDur);
+      animateView(1, Math.max(90, Math.round(TUNE.closeDur * (1 - viewP))));
+    } else {
+      animateView(0, TUNE.closeDur);                        // not far enough — reopen
+    }
+  }
+  focusLayer.addEventListener('pointerup', endViewGesture);
+  focusLayer.addEventListener('pointercancel', endViewGesture);
+
+  // ---- mouse wheel and trackpad ----
+  // A vertical wheel is the natural gesture on a desktop, but the grid reads left to right,
+  // so scrolling down travels right and scrolling up travels left. Horizontal wheels and
+  // trackpad swipes map straight through.
+  let wheelSettle = null;
+  canvasViewport.addEventListener('wheel', (e) => {
+    if(pageGallery.hidden || viewMode) return;
+    e.preventDefault();
+    camSettling = false;
+    const step = (Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY);
+    cam.x += step * 0.9 / camZoom;
+    dirty = true;
+    if(wheelSettle) clearTimeout(wheelSettle);
+    // settle onto a piece once the wheel stops, so it never rests between two
+    wheelSettle = setTimeout(() => { homeOn(nearestCell(cam.x, cam.y), TUNE.homeDur); }, 130);
+  }, { passive: false });
+
+  // ---- arrow keys ----
+  // Left and right step along the row. Up takes the piece above to the right, down the one
+  // below to the left, following how the rows are offset against each other.
+  function stepLattice(dir){
+    const from = cellAt(homeCell ? { col: homeCell.col, row: homeCell.row } : null) || nearestCell(cam.x, cam.y);
+    if(!from) return;
+    const odd = from.row & 1;
+    let col = from.col, row = from.row;
+    if(dir === 'left')  col -= 1;
+    if(dir === 'right') col += 1;
+    if(dir === 'up')   { row -= 1; if(odd) col += 1; }
+    if(dir === 'down') { row += 1; if(!odd) col -= 1; }
+    const target = cellAt({ col: col, row: row });
+    if(target) homeOn(target, TUNE.homeDur);
+  }
+  window.addEventListener('keydown', (e) => {
+    if(pageGallery.hidden) return;
+    const map = { ArrowLeft:'left', ArrowRight:'right', ArrowUp:'up', ArrowDown:'down' };
+    if(map[e.key]){
+      if(viewMode) return;                 // arrows do nothing while a piece fills the screen
+      e.preventDefault();
+      stepLattice(map[e.key]);
+      return;
+    }
+    if((e.key === 'Enter' || e.key === ' ') && !viewMode && homeCell){
+      e.preventDefault();
+      enterViewMode(homeCell);             // open whatever is centred
+    }
+  });
+
+  window.addEventListener('resize', () => {
+    if(pageGallery.hidden) return;
+    computeZoom();
+    updateGrid(true);
+    homeOn(nearestCell(cam.x, cam.y), 300);
+  });
+
+  // ---- page elements + home-page scroll effects ----
+  const pageHome = document.getElementById('page-home');
+  const pageGallery = document.getElementById('page-gallery');
+  const pageContact = document.getElementById('page-contact');
+  const topbar = document.getElementById('topbar');
+  const topBtn = document.getElementById('topBtn');
+
+  window.addEventListener('scroll', () => {
+    topbar.classList.toggle('scrolled', window.scrollY > 40);
+    topBtn.classList.toggle('show', window.scrollY > 400);
+  });
+  topBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+  const menuBtn = document.getElementById('menuBtn');
+  const navOverlay = document.getElementById('navOverlay');
+  menuBtn.addEventListener('click', () => {
+    menuBtn.classList.toggle('open');
+    navOverlay.classList.toggle('open');
+  });
+
+  let galleryReady = false;
+  function showPage(name){
+    const isGallery = name === 'gallery', isContact = name === 'contact';
+    // Leaving the gallery must tear the enlarged view down. Without this it stayed on
+    // screen over the next page — a fuzz run navigating away mid-view surfaced it.
+    if(!isGallery && viewMode) finishClose();
+    pageGallery.hidden = !isGallery;
+    pageContact.hidden = !isContact;
+    pageHome.hidden = isGallery || isContact;
+    topbar.classList.toggle('on-gallery', isGallery);
+    document.body.classList.toggle('gallery-mode', isGallery);
+    if(isGallery) initGallery();
+    window.scrollTo(0, 0);
+  }
+  function goTo(route){
+    menuBtn.classList.remove('open');
+    navOverlay.classList.remove('open');
+    const page = (route === 'gallery' || route === 'contact') ? route : 'home';
+    showPage(page);
+    try{
+      const url = page === 'home' ? (window.location.pathname + window.location.search) : '#' + page;
+      // pushState, not replaceState: each view becomes its own history entry, so the phone's
+      // back gesture returns to the previous one instead of leaving the site altogether.
+      history.pushState({ page: page }, '', url);
+    }catch(e){ /* file:// in some sandboxes disallows this — safe to ignore */ }
+  }
+  document.querySelectorAll('[data-route]').forEach(el => {
+    el.addEventListener('click', (e) => { e.preventDefault(); goTo(el.dataset.route); });
+  });
+
+  // A category with too few artworks cannot fill an endless grid without repeating beside
+  // itself; the build leaves such a filter out and its button stays hidden.
+  document.querySelectorAll('.filter-tab').forEach(tab => {
+    if(G.filters.indexOf(tab.dataset.filter) === -1){ tab.style.display = 'none'; return; }
+    tab.addEventListener('click', () => {
+      if(filterBusy || tab.dataset.filter === activeFilter) return;
+      filterBusy = true;
+      const next = tab.dataset.filter;
+      document.querySelectorAll('.filter-tab').forEach(t =>
+        t.classList.toggle('active', t.dataset.filter === next));
+      if(viewMode) finishClose();
+      // only the pieces that genuinely change take part in the animation
+      const leaving = cells.filter(c => imageForFilter(next, c.col, c.row) !== c.imgId);
+      leaving.forEach(c => animateSpawn(c, 1, 0, 190, 0));
+      window.setTimeout(() => {
+        activeFilter = next;
+        const changed = updateGrid(true);
+        // Growing straight to the final size — including the centre piece's enlargement,
+        // which comes from its weight — so it is one motion rather than grow-then-scale.
+        changed.forEach(c => {
+          const d = Math.hypot(c.cx - cam.x, c.cy - cam.y);
+          animateSpawn(c, 0, 1, 380, Math.min(220, d / SX * 55));
+        });
+        window.setTimeout(() => { filterBusy = false; }, 640);
+      }, leaving.length ? 210 : 0);
+    });
+  });
+
+  // ---- opening: hold wide on ~8 pieces, then settle into one and fill the screen ----
+  function initGallery(){
+    if(galleryReady) return;
+    galleryReady = true;
+    computeZoom();
+    cam.x = cellX(0,0); cam.y = cellY(0);
+    updateGrid(true);
+    layoutCells(performance.now());
+    render();
+    requestAnimationFrame(tick);
+  }
+
+  const initialHash = window.location.hash.replace('#','');
+  if(initialHash === 'gallery' || initialHash === 'contact'){ showPage(initialHash); }
+  try{ history.replaceState({ page: initialHash || 'home' }, '', window.location.href); }catch(e){}
+
+  // Going back: close the enlarged view first if one is open, otherwise change page. That
+  // matches what the gesture means to a visitor — one step back, not straight off the site.
+  window.addEventListener('popstate', (e) => {
+    if(viewMode){
+      closeViewMode();
+      try{ history.pushState({ page: 'gallery' }, '', '#gallery'); }catch(err){}
+      return;
+    }
+    const page = (e.state && e.state.page) || window.location.hash.replace('#','') || 'home';
+    menuBtn.classList.remove('open');
+    navOverlay.classList.remove('open');
+    showPage(page === 'gallery' || page === 'contact' ? page : 'home');
+  });
+
+  // Escape leaves the view mode
+  window.addEventListener('keydown', (e) => { if(e.key === 'Escape') closeViewMode(); });
+
+  // ---- light deterrent against easy image saving — not real protection ----
+  document.addEventListener('contextmenu', (e) => { if(e.target.tagName === 'IMG') e.preventDefault(); });
+</script>
+
+</body>
+</html>

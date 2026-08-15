@@ -1,0 +1,6 @@
+{
+  "_comment": "Which artworks appear on the front page. Match any part of a filename; leave empty to let the build pick.",
+  "banner": ["001-artwork-01", "009-artwork-09"],
+  "firstLook": "005-artwork-05",
+  "icon": "001-artwork-01"
+}

@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Not found — Lukas Meyer</title>
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/png" href="/favicon.png">
+<meta name="theme-color" content="#0b0b0d">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caesar+Dressing&family=Baloo+2:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg: #0b0b0d;
+  --bg-alt: #16101a;
+  --fg: #eae6df;
+  --fg-dim: #948d82;
+  --accent-a: #45d6c6;
+  --accent-b: #e8478f;
+  --gradient: linear-gradient(100deg, var(--accent-a), var(--accent-b));
+  --gap: clamp(14px, 3vw, 28px);
+  --maxw: 1440px;
+}
+*{ box-sizing:border-box; }
+html{ scroll-behavior:smooth; }
+body{
+  margin:0; background:var(--bg); color:var(--fg);
+  font-family:'Baloo 2', sans-serif; font-weight:500; -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+h1,h2,h3, .display{ font-family:'Baloo 2', sans-serif; font-weight:700; letter-spacing:-0.01em; margin:0; }
+a{ color:inherit; }
+img{ max-width:100%; display:block; }
+button{ font-family:inherit; }
+::selection{ background:var(--accent-b); color:#0b0b0d; }
+:focus-visible{ outline: 2px solid var(--accent-a); outline-offset: 3px; }
+img{ -webkit-user-drag:none; user-select:none; }
+
+.eyebrow{
+  font-family:'Baloo 2', sans-serif; font-weight:500; font-size:0.72rem; letter-spacing:0.14em;
+  text-transform:uppercase; color:var(--fg-dim);
+  display:flex; align-items:center; gap:10px;
+}
+.eyebrow::before{ content:""; width:22px; height:1px; background:var(--gradient); }
+.divider{ width:40px; height:1px; background:rgba(234,230,223,0.22); margin-bottom:20px; }
+
+/* ---------- top bar: gray gradient bar, fades to transparent at its bottom edge ---------- */
+.topbar{
+  position:fixed; top:0; left:0; right:0; z-index:50;
+  display:flex; align-items:center; gap:10px;
+  padding: 18px clamp(18px, 4vw, 40px) 30px;
+  background: linear-gradient(to bottom, rgba(11,11,13,0.55) 0%, rgba(11,11,13,0.55) 55%, rgba(11,11,13,0) 100%);
+  transition: padding .35s ease;
+}
+.topbar.scrolled{ padding: 10px clamp(18px, 4vw, 40px) 24px; }
+.topbar-filters{ display:none; gap:8px; overflow-x:auto; }
+.topbar.on-gallery .topbar-filters{ display:flex; }
+.topbar-filters .filter-tab{ font-size:0.72rem; padding:6px 12px; white-space:nowrap; }
+.menu-btn{
+  background:none; border:none; cursor:pointer; width:34px; height:26px; position:relative; padding:0;
+  margin-left:auto; flex-shrink:0;
+}
+.menu-btn span{
+  position:absolute; left:0; right:0; height:2px; background:var(--fg); border-radius:2px;
+  transition: transform .35s ease, opacity .25s ease, background .35s ease;
+}
+.menu-btn span:nth-child(1){ top:2px; }
+.menu-btn span:nth-child(2){ top:12px; }
+.menu-btn span:nth-child(3){ top:22px; }
+.menu-btn.open span:nth-child(1){ transform: translateY(10px) rotate(45deg); }
+.menu-btn.open span:nth-child(2){ opacity:0; }
+.menu-btn.open span:nth-child(3){ transform: translateY(-10px) rotate(-45deg); }
+
+/* ---------- nav overlay ---------- */
+.nav-overlay{
+  position:fixed; inset:0; z-index:40; background:var(--bg);
+  display:flex; flex-direction:column; align-items:flex-start; justify-content:center; gap:18px;
+  padding: 0 clamp(24px, 6vw, 80px);
+  transform: translateY(-100%);
+  transition: transform .5s cubic-bezier(.7,0,.2,1);
+}
+.nav-overlay.open{ transform: translateY(0); }
+.nav-overlay a{
+  font-family:'Baloo 2', sans-serif; font-size: clamp(2rem, 8vw, 3.4rem); font-weight:700;
+  text-decoration:none; color:var(--fg-dim); transition: color .25s ease;
+}
+.nav-overlay a:hover{ color:var(--fg); }
+.nav-overlay a span{
+  background:var(--gradient); -webkit-background-clip:text; background-clip:text; color:transparent; display:none;
+}
+.nav-overlay a:hover span{ display:inline; }
+
+/* ---------- pages ---------- */
+.page[hidden]{ display:none; }
+
+/* ---------- hero ---------- */
+.hero{
+  position:relative; min-height:100svh;
+  display:flex; flex-direction:column; justify-content:flex-end; overflow:hidden;
+  padding: 0 clamp(20px, 5vw, 56px) clamp(48px, 8vh, 88px);
+}
+.hero-bg{ position:absolute; inset:0; z-index:0; }
+.hero-bg img{
+  position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:0;
+  filter: saturate(0.85) brightness(0.55); animation: crossfade 16s infinite;
+}
+.hero-bg img:nth-child(1){ animation-delay:0s; }
+.hero-bg img:nth-child(2){ animation-delay:8s; }
+@keyframes crossfade{
+  0%{ opacity:0; } 8%{ opacity:1; } 50%{ opacity:1; } 58%{ opacity:0; } 100%{ opacity:0; }
+}
+.hero::after{
+  content:""; position:absolute; inset:0; z-index:1;
+  background: linear-gradient(to top, rgba(11,11,13,0.88) 0%, rgba(11,11,13,0.25) 42%, rgba(11,11,13,0) 68%);
+}
+.hero-content{ position:relative; z-index:2; max-width:34ch; }
+.hero h1{
+  font-family:'Caesar Dressing', cursive; font-weight:400;
+  font-size: clamp(1.8rem, 4.8vw, 3rem); line-height:1.1; letter-spacing:0.01em;
+}
+.hero p.tagline{ margin-top:16px; color:var(--fg-dim); font-size: clamp(0.9rem, 1.6vw, 1.05rem); font-weight:500; }
+
+/* ---------- generic sections ---------- */
+.section{ padding: clamp(60px, 10vh, 110px) clamp(18px, 5vw, 56px); }
+.section-head{ max-width:var(--maxw); margin:0 auto 30px; }
+.section-head h2{ font-size: clamp(1.5rem, 3.4vw, 2.2rem); margin-top:8px; }
+
+/* ---------- first look ---------- */
+.first-look{ max-width: 760px; margin: 0 auto; }
+.first-look figure{ margin:0; }
+.first-look img{ width:100%; height:auto; }
+
+.cta-row{ max-width:var(--maxw); margin: 40px auto 0; display:flex; justify-content:center; }
+.btn-gradient{
+  position:relative; display:inline-flex; align-items:center; gap:10px;
+  padding: 14px 26px; border-radius: 999px; border: 1px solid rgba(234,230,223,0.18);
+  background: transparent; color:var(--fg); font-size:0.95rem; letter-spacing:0.02em;
+  cursor:pointer; text-decoration:none;
+  transition: border-color .3s ease, transform .3s ease;
+}
+.btn-gradient:hover{ border-color: transparent; transform: translateY(-1px); }
+.btn-gradient::before{
+  content:""; position:absolute; inset:0; border-radius:999px; padding:1px; background:var(--gradient);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor; mask-composite: exclude;
+  opacity:0; transition: opacity .3s ease;
+}
+.btn-gradient:hover::before{ opacity:1; }
+
+/* ---------- gallery: fullscreen, infinite, organic non-overlapping layout ---------- */
+.filter-tab{
+  font-size:0.82rem; letter-spacing:0.03em; padding:9px 18px; border-radius:999px;
+  border:1px solid rgba(234,230,223,0.18); background:transparent; color:var(--fg-dim); cursor:pointer;
+  transition: background .2s ease, color .2s ease, border-color .2s ease;
+}
+.filter-tab.active{ color:var(--bg); background:var(--fg); border-color:var(--fg); }
+
+.canvas-viewport{
+  position: fixed; inset: 0;        /* == the visual viewport, so centre is truly centre */
+  overflow: hidden;
+  touch-action: none;
+  cursor: grab;
+  background: var(--bg);
+}
+.canvas-viewport.dragging{ cursor: grabbing; }
+.canvas-inner{
+  position:absolute; top:0; left:0;
+  transform-origin: 0 0;
+  will-change: transform;
+  transition: filter .34s ease;
+}
+.canvas-viewport.view-active .canvas-inner{ filter: blur(9px) saturate(.85); }
+.node{
+  position:absolute;
+  transform-origin: 50% 50%;
+  /* no CSS transition: position, scale and spawn are all computed frame in JS so they
+     compose into a single continuous motion instead of chaining separate animations */
+}
+
+/* THE centring bug: <figure> carries a UA default margin of 1em 40px, which offset every
+   image inside its own box. The camera centred the box; the image sat 40px to the right
+   of it. Everything downstream of this looked "off centre" no matter how exact the maths. */
+figure{ margin:0; }
+/* Fullscreen is drawn in its own fixed layer, OUTSIDE the transformed canvas. Centring
+   is then pure CSS (left/top 50% + translate(-50%,-50%)) with no camera maths involved —
+   which removes the whole class of off-centre bugs. The blur is one scrim rather than a
+   filter on ~48 separate tiles, so it stays cheap on a phone. */
+.canvas-viewport{ z-index:1; }
+.node{ cursor:zoom-in; }
+.focus-layer{
+  position:fixed; inset:0; z-index:20;
+  pointer-events:none;
+  touch-action:none;
+  visibility:hidden;          /* no delay: the overlay must vanish the moment it has
+                                 finished shrinking, not when the camera finally stops */
+}
+.focus-layer.active{ visibility:visible; pointer-events:auto; cursor:zoom-out; }
+.focus-scrim{
+  position:absolute; inset:0;
+  background: rgba(11,11,13,0.55);
+  opacity:0;
+  transition: opacity .34s ease;   /* only used while opening; the close drives it per frame */
+}
+.focus-layer.active .focus-scrim{ opacity:1; }
+.focus-frame{
+  position:absolute; left:50%; top:50%;
+  will-change: transform;
+  box-shadow: 0 30px 90px rgba(0,0,0,0.55);
+}
+.focus-frame.animate{ transition: transform .58s cubic-bezier(.16,1,.3,1); }
+.focus-frame img{ width:100%; height:100%; display:block; }
+body.gallery-mode{ overflow:hidden; height:100%; }
+body.gallery-mode footer{ display:none; }
+
+/* ---------- lightbox-triggering images ---------- */
+.lightbox-trigger{ overflow:hidden; position:relative; width:100%; height:100%; }
+.lightbox-trigger img{ width:100%; height:100%; object-fit:cover; display:block; }
+.first-look .lightbox-trigger{ height:auto; }
+.first-look .lightbox-trigger img{ height:auto; object-fit:initial; }
+
+/* ---------- contact page ---------- */
+.contact-section{ padding-top: clamp(110px, 18vh, 160px); min-height: 70vh; }
+.contact-body{ max-width: 60ch; margin: 0 auto; }
+.contact-lead{ font-size: clamp(1.05rem, 2.4vw, 1.35rem); line-height:1.55; color:var(--fg); margin:0 0 40px; }
+.contact-list{ margin:0 0 40px; padding:0; }
+.contact-list > div{ display:flex; gap:20px; flex-wrap:wrap; padding:16px 0; border-top:1px solid rgba(234,230,223,0.10); }
+.contact-list dt{ flex:0 0 8rem; margin:0; color:var(--fg-dim); font-size:0.72rem; letter-spacing:0.14em; text-transform:uppercase; padding-top:3px; }
+.contact-list dd{ margin:0; font-size:1.02rem; }
+.contact-list a{ text-decoration:none; border-bottom:1px solid rgba(234,230,223,0.28); }
+.contact-list a:hover{ color:var(--accent-a); border-bottom-color:var(--accent-a); }
+.contact-note{ color:var(--fg-dim); font-size:0.92rem; line-height:1.6; margin:0; }
+
+/* ---------- about section on the contact page ---------- */
+.about-block{ margin: 0 0 44px; padding-bottom: 36px; border-bottom: 1px solid rgba(234,230,223,0.10); }
+.about-heading{
+  font-size:0.72rem; letter-spacing:0.14em; text-transform:uppercase;
+  color:var(--fg-dim); font-weight:500; margin:0 0 16px;
+}
+.about-text{ margin:0 0 16px; line-height:1.7; font-size:1rem; }
+.about-text:last-child{ margin-bottom:0; }
+
+/* ---------- shown only when scripting is off ---------- */
+.noscript-note{
+  position:fixed; inset:0; z-index:90; background:var(--bg); color:var(--fg);
+  display:flex; flex-direction:column; gap:14px;
+  align-items:center; justify-content:center; text-align:center;
+  padding:0 clamp(24px, 8vw, 80px); font-size:0.98rem; line-height:1.6;
+}
+.noscript-note p{ max-width:44ch; margin:0; }
+.noscript-note a{ color:var(--accent-a); }
+
+/* ---------- caption under the enlarged piece ---------- */
+.focus-caption{
+  position:absolute; left:50%; bottom:max(18px, env(safe-area-inset-bottom));
+  transform:translateX(-50%);
+  display:flex; gap:10px; align-items:baseline; flex-wrap:wrap; justify-content:center;
+  max-width:92vw; padding:0 16px; text-align:center;
+  font-size:0.82rem; color:var(--fg); opacity:0; transition:opacity .3s ease .12s;
+  pointer-events:none;
+}
+.focus-layer.active .focus-caption{ opacity:1; }
+.focus-caption .focus-date{ color:var(--fg-dim); }
+.focus-caption .placeholder{ color:var(--fg-dim); font-style:italic; }
+
+/* ---------- how much of the collection has been seen ---------- */
+.seen-count{
+  position:fixed; right:14px; bottom:max(14px, env(safe-area-inset-bottom));
+  z-index:30; display:none;
+  padding:6px 12px; border-radius:999px;
+  background:rgba(11,11,13,0.45); color:var(--fg);
+  font-size:0.72rem; letter-spacing:0.04em; opacity:0.55;
+  pointer-events:none; transition:opacity .3s ease;
+}
+body.gallery-mode .seen-count{ display:block; }
+.seen-count.complete{ opacity:0.85; color:var(--accent-a); }
+
+/* ---------- footer ---------- */
+footer{
+  padding: 50px clamp(18px, 5vw, 56px) 40px; max-width:var(--maxw); margin:0 auto;
+  display:flex; flex-wrap:wrap; gap:16px; align-items:center; justify-content:space-between;
+  border-top:1px solid rgba(234,230,223,0.08);
+}
+footer .foot-meta{ color:var(--fg-dim); font-size:0.85rem; display:flex; gap:18px; flex-wrap:wrap; }
+footer a{ text-decoration:none; }
+footer a:hover{ color: var(--accent-a); }
+
+/* ---------- back to top ---------- */
+.top-btn{
+  position:fixed; right:20px; bottom:20px; z-index:45; width:46px; height:46px; border-radius:50%;
+  background:var(--fg); color:var(--bg); border:none; cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  opacity:0; transform:translateY(10px); pointer-events:none;
+  transition: opacity .3s ease, transform .3s ease;
+}
+.top-btn.show{ opacity:1; transform:translateY(0); pointer-events:auto; }
+
+@media (prefers-reduced-motion: reduce){
+  html{ scroll-behavior:auto; }
+  .hero-bg img{ animation:none; opacity:1 !important; }
+  .hero-bg img:nth-child(2){ display:none; }
+}
+
+.notfound{
+  min-height:100svh; display:flex; flex-direction:column;
+  align-items:center; justify-content:center; gap:18px;
+  text-align:center; padding:0 clamp(24px, 8vw, 80px);
+}
+.notfound h1{
+  font-family:'Caesar Dressing', cursive; font-weight:400;
+  font-size: clamp(2.2rem, 9vw, 4rem); line-height:1;
+}
+.notfound p{ color:var(--fg-dim); max-width:42ch; margin:0; line-height:1.6; }
+.notfound .divider{ margin:6px 0 0; }
+</style>
+</head>
+<body>
+<main class="notfound">
+  <div class="divider"></div>
+  <h1>Nothing here</h1>
+  <p>That page does not exist — it may have moved, or the address has a typo in it.</p>
+  <a href="/" class="btn-gradient">Back to the gallery →</a>
+</main>
+</body>
+</html>
